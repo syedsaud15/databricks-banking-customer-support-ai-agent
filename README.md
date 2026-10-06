@@ -1,106 +1,298 @@
-# 🏦 Banking Customer Support AI Agent
+<div align="center">
 
-An end-to-end AI-powered banking support system built on the Databricks Lakehouse Platform using a **Databricks Supervisor Agent** and **Unity Catalog Functions**.
+# 🏦 Agentic Banking Intelligence on Databricks
 
-The agent converts natural-language banking requests into tool calls, retrieves customer information from governed Unity Catalog data, and combines multiple results into a structured customer-support response.
+### A Governed Multi-Tool AI Agent for Banking Customer Support
 
-## 🚀 Project Overview
+**Natural Language → Supervisor Agent → Parallel Tool Execution → Unity Catalog → Unified Response**
 
-Traditional banking support systems often require users or support teams to check account, transaction, and credit-card information separately.
+A production-style Agentic AI system built on the **Databricks Lakehouse Platform** that interprets banking requests, autonomously selects governed tools, executes multiple data operations, and synthesizes the results into a single customer-support response.
 
-This project demonstrates how an AI agent can orchestrate multiple governed banking tools and provide a unified response from a single natural-language request.
+<br>
 
-Example request:
+![Databricks](https://img.shields.io/badge/Databricks-Lakehouse-FF3621?style=for-the-badge&logo=databricks&logoColor=white)
+![Agentic AI](https://img.shields.io/badge/Agentic_AI-Supervisor_Agent-6C63FF?style=for-the-badge)
+![Unity Catalog](https://img.shields.io/badge/Unity_Catalog-Governed_Tools-00A972?style=for-the-badge)
+![SQL](https://img.shields.io/badge/SQL-Agent_Tools-4479A1?style=for-the-badge)
+![Model Serving](https://img.shields.io/badge/Model_Serving-AI_Inference-F59E0B?style=for-the-badge)
 
-> For customer CUST0001, provide a complete banking summary including the current account balance, recent transactions, and credit utilization. Also check the status and details of transaction TXN000219.
+</div>
 
-The Supervisor Agent determines which tools are required, executes the relevant Unity Catalog functions, and combines the results into one response.
+---
 
-## 🏗️ Architecture
+## 🧠 What Makes This an AI Agent?
+
+This project is **not a traditional chatbot** that only generates text.
+
+The banking agent can interpret a natural-language request, determine which tools are required, invoke multiple governed Unity Catalog functions, retrieve structured banking data, and combine the tool outputs into one contextual response.
+
+For a single customer request, the agent can autonomously:
+
+- retrieve the customer's account balance
+- fetch recent transactions
+- calculate credit-card utilization
+- investigate a specific transaction
+- execute independent tools in parallel
+- synthesize all results into one banking summary
+
+The LLM acts as the **reasoning and orchestration layer**, while governed Unity Catalog functions act as the agent's tools.
+
+---
+
+# 🏗️ Agent Architecture
 
 ```text
-                    User
-                      │
-                      ▼
-             Natural Language Query
-                      │
-                      ▼
-        ┌───────────────────────────┐
-        │ Databricks Supervisor    │
-        │        Agent             │
-        └─────────────┬─────────────┘
-                      │
-          Tool Selection & Routing
-                      │
-       ┌──────────────┼──────────────┐
-       │              │              │
-       ▼              ▼              ▼
- Account Balance   Transactions   Credit Utilization
-    Function         Function         Function
-       │              │              │
-       └──────────────┼──────────────┘
-                      │
-                      ▼
-             Transaction Status
-                  Function
-                      │
-                      ▼
-              Unity Catalog
-                      │
-                      ▼
-          Governed Banking Data
-                      │
-                      ▼
-             AI Generated Response
+┌───────────────────────────────────────────────────────────────┐
+│                       CUSTOMER REQUEST                        │
+│                                                               │
+│  "Give me my banking summary and check transaction status"    │
+└──────────────────────────────┬────────────────────────────────┘
+                               │
+                               ▼
+┌───────────────────────────────────────────────────────────────┐
+│                    DATABRICKS AI PLAYGROUND                    │
+│                                                               │
+│                 Natural-Language Interface                    │
+└──────────────────────────────┬────────────────────────────────┘
+                               │
+                               ▼
+┌───────────────────────────────────────────────────────────────┐
+│                     SUPERVISOR AI AGENT                       │
+│                                                               │
+│   Understand Request → Plan → Select Tools → Orchestrate      │
+└──────────────────────────────┬────────────────────────────────┘
+                               │
+             ┌─────────────────┼─────────────────┐
+             │                 │                 │
+             ▼                 ▼                 ▼
+┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
+│ Account Balance │  │ Recent          │  │ Credit Card     │
+│ Tool            │  │ Transactions    │  │ Utilization     │
+└────────┬────────┘  └────────┬────────┘  └────────┬────────┘
+         │                    │                    │
+         │                    │          ┌─────────┘
+         │                    │          │
+         │                    │          ▼
+         │                    │  ┌─────────────────┐
+         │                    │  │ Transaction     │
+         │                    │  │ Status Tool     │
+         │                    │  └────────┬────────┘
+         │                    │           │
+         └────────────────────┼───────────┘
+                              │
+                              ▼
+┌───────────────────────────────────────────────────────────────┐
+│                  UNITY CATALOG GOVERNANCE                     │
+│                                                               │
+│          Governed Functions + Banking Data Access             │
+└──────────────────────────────┬────────────────────────────────┘
+                               │
+                               ▼
+┌───────────────────────────────────────────────────────────────┐
+│                    BANKING DATA LAYER                         │
+│                                                               │
+│      Customers • Accounts • Transactions • Credit Cards       │
+└──────────────────────────────┬────────────────────────────────┘
+                               │
+                               ▼
+┌───────────────────────────────────────────────────────────────┐
+│                  AGENT RESPONSE SYNTHESIS                     │
+│                                                               │
+│       Account + Transactions + Credit + Investigation         │
+│                    → Unified Response                         │
+└───────────────────────────────────────────────────────────────┘
 ```
 
-## 🧠 Agent Tools
+---
 
-The Supervisor Agent is connected to four Unity Catalog functions.
+# ⚡ Agent Execution Flow
 
-| Tool | Purpose |
-|---|---|
-| `get_customer_balance` | Retrieves account balance and account information |
-| `get_recent_transactions` | Retrieves recent customer transactions |
-| `calculate_credit_utilization` | Retrieves credit-card information and calculates utilization |
-| `check_transaction_status` | Checks the status and details of a specific transaction |
+The key engineering feature of this project is **tool orchestration**.
 
-These functions allow the agent to access structured banking data through controlled and reusable tools instead of directly querying arbitrary data.
-
-## ⚙️ Agent Workflow
+When the user submits a request containing multiple banking requirements, the supervisor agent decomposes the request and determines which tools should be invoked.
 
 ```text
 User Request
-     ↓
+     │
+     ▼
+Intent Understanding
+     │
+     ▼
 Supervisor Agent
-     ↓
-Understand Intent
-     ↓
-Select Required Tools
-     ↓
-Execute Unity Catalog Functions
-     ↓
-Retrieve Banking Data
-     ↓
-Combine Tool Results
-     ↓
-Generate Structured Response
+     │
+     ├──► get_customer_balance()
+     │
+     ├──► get_recent_transactions()
+     │
+     ├──► calculate_credit_utilization()
+     │
+     └──► check_transaction_status()
+                  │
+                  ▼
+          Structured Tool Results
+                  │
+                  ▼
+          Response Synthesis
+                  │
+                  ▼
+       Customer Banking Summary
 ```
 
-For requests requiring multiple pieces of information, the Supervisor Agent can invoke multiple tools and synthesize their outputs into a single banking summary.
+Independent operations can be executed **in parallel**, reducing unnecessary sequential tool calls and demonstrating agent-based orchestration rather than a fixed query pipeline.
 
-## 🛠️ Technology Stack
+---
 
-- Databricks Lakehouse Platform
+# 🛠️ Governed Agent Tools
+
+The agent is equipped with four banking tools implemented as **Databricks Unity Catalog functions**.
+
+| Agent Tool | Responsibility |
+|---|---|
+| `get_customer_balance` | Retrieves account information and current balance |
+| `get_recent_transactions` | Returns recent customer transaction activity |
+| `calculate_credit_utilization` | Calculates credit-card usage and available credit |
+| `check_transaction_status` | Investigates the status and details of a transaction |
+
+These functions separate **LLM reasoning** from **data retrieval logic**, making the architecture more controlled, modular, and auditable.
+
+---
+
+# 🔐 Why Unity Catalog Functions?
+
+Giving an LLM unrestricted access to banking tables would be a poor architecture.
+
+Instead, the agent interacts with predefined functions exposed through **Unity Catalog**.
+
+```text
+LLM / Supervisor Agent
+          │
+          X  No unrestricted table access
+          │
+          ▼
+Governed Unity Catalog Functions
+          │
+          ▼
+Approved Banking Data Operations
+```
+
+This design provides a clearer boundary between the AI reasoning layer and the underlying data layer.
+
+---
+
+# 💬 Example Agent Request
+
+A single natural-language request can require several independent banking operations:
+
+> **For customer CUST0001, provide a complete banking summary including the current account balance, recent transactions, and credit utilization. Also check the status and details of transaction TXN000219.**
+
+Instead of requiring separate queries, the supervisor agent identifies the required tools and orchestrates the workflow automatically.
+
+---
+
+# 🤖 Live Agent Execution
+
+## 1️⃣ Supervisor Agent — Parallel Tool Execution
+
+The agent interprets the request and invokes the required banking tools.
+
+![Agent Parallel Tool Execution](screenshots/01-agent-parallel-tool-execution.png)
+
+The execution demonstrates that a single natural-language request can trigger multiple independent tool calls.
+
+---
+
+## 2️⃣ Governed Unity Catalog Function Results
+
+The agent retrieves structured information through Unity Catalog tools, including credit utilization and transaction status.
+
+![Unity Catalog Function Results](screenshots/02-unity-catalog-function-results.png)
+
+The LLM does not need to manually construct separate banking queries for every user request. It selects the appropriate registered tools based on intent.
+
+---
+
+## 3️⃣ Final Agent-Synthesized Banking Response
+
+After collecting tool results, the agent produces a unified customer-support response.
+
+![Final Banking Agent Response](screenshots/03-final-banking-agent-response.png)
+
+The final response combines:
+
+**Account Information + Recent Transactions + Credit Utilization + Transaction Investigation**
+
+into one contextual result.
+
+---
+
+# 🧩 End-to-End Agent Lifecycle
+
+```text
+1. User submits natural-language banking request
+                       ↓
+2. Supervisor Agent interprets user intent
+                       ↓
+3. Agent identifies required banking capabilities
+                       ↓
+4. Appropriate Unity Catalog tools are selected
+                       ↓
+5. Independent tools execute in parallel where possible
+                       ↓
+6. Structured banking results return to the agent
+                       ↓
+7. Agent reasons across multiple tool outputs
+                       ↓
+8. Unified customer-support response is generated
+```
+
+This architecture demonstrates the transition from a simple **LLM application** to a **tool-using Agentic AI workflow**.
+
+---
+
+# 🗄️ Data & Tool Architecture
+
+The project separates responsibilities across three major layers:
+
+### 🧠 Intelligence Layer
 - Databricks Supervisor Agent
-- Databricks AI/ML Playground
-- Unity Catalog
-- Unity Catalog Functions
-- Databricks SQL
-- Model Serving Endpoint
-- GitHub
+- Natural-language understanding
+- Tool selection
+- Multi-tool orchestration
+- Response synthesis
 
-## 📂 Repository Structure
+### 🛠️ Governed Tool Layer
+- Unity Catalog Functions
+- Account balance retrieval
+- Transaction retrieval
+- Credit utilization calculation
+- Transaction-status investigation
+
+### 💾 Banking Data Layer
+- Customer records
+- Bank accounts
+- Transaction history
+- Credit-card information
+
+This separation prevents business logic from being embedded entirely inside the LLM prompt.
+
+---
+
+# 🧰 Technology Stack
+
+| Technology | Role |
+|---|---|
+| **Databricks Lakehouse Platform** | Core data and AI platform |
+| **Databricks Supervisor Agent** | Agent orchestration and reasoning |
+| **Databricks AI Playground** | Agent interaction and testing |
+| **Unity Catalog** | Governed tool registration and access |
+| **Unity Catalog Functions** | Banking tools used by the agent |
+| **SQL** | Banking data retrieval and business logic |
+| **Model Serving** | Model inference layer |
+| **GitHub** | Source control and project documentation |
+
+---
+
+# 📁 Repository Structure
 
 ```text
 databricks-banking-customer-support-ai-agent/
@@ -108,103 +300,105 @@ databricks-banking-customer-support-ai-agent/
 ├── sql/
 │   └── setup_banking_ai.sql
 │
+├── screenshots/
+│   ├── 01-agent-parallel-tool-execution.png
+│   ├── 02-unity-catalog-function-results.png
+│   └── 03-final-banking-agent-response.png
+│
 └── README.md
 ```
 
 ### `sql/setup_banking_ai.sql`
 
-Contains the Unity Catalog function definitions used as tools by the Supervisor Agent.
+Contains the Unity Catalog banking functions used by the supervisor agent for governed data access and tool execution.
 
-## 🧪 Example Capabilities
+### `screenshots/`
 
-The agent can handle requests such as:
+Contains execution evidence from Databricks AI Playground showing tool invocation, structured results, and the final agent response.
 
-- Retrieve a customer's current account balance
-- Display recent banking transactions
-- Calculate credit-card utilization
-- Check the status of a specific transaction
-- Combine multiple banking operations into one customer summary
+---
 
-## 🤖 Supervisor Agent
+# 🎯 Engineering Decisions
 
-The project uses a Databricks Supervisor Agent as the orchestration layer.
+### Tool-based architecture instead of prompt-only AI
 
-Instead of manually selecting a function, the user submits a natural-language request. The Supervisor Agent interprets the request and determines which available tools should be called.
+Banking operations are exposed as explicit functions rather than relying on the model to generate arbitrary data-access logic.
 
-For a complete banking-summary request, the agent can coordinate:
+### Supervisor-driven orchestration
 
-```text
-get_customer_balance
-        +
-get_recent_transactions
-        +
-calculate_credit_utilization
-        +
-check_transaction_status
-        ↓
-Unified Banking Response
-```
+The agent decides which capabilities are required from the user's request instead of following one hard-coded sequence.
 
-This demonstrates **tool calling, agent orchestration, governed data access, and multi-tool reasoning** within Databricks.
+### Parallel execution
 
-## 🌐 Deployment
+Independent banking operations can be invoked together, demonstrating multi-tool agent orchestration.
 
-The Supervisor Agent is deployed through a Databricks Model Serving endpoint.
+### Separation of reasoning and data access
 
-The deployed endpoint enables the agent to be tested through Databricks Playground and provides a foundation for integration with external applications or customer-support interfaces.
+The model handles intent, planning, and synthesis while Unity Catalog functions handle deterministic data operations.
 
-## 🔐 Governance
+### Governed interface to banking data
 
-Unity Catalog is used as the governance layer for the banking tools and underlying data resources.
+Unity Catalog provides a controlled tool boundary between the AI agent and the underlying data.
 
-Using Unity Catalog Functions provides a controlled interface between the AI agent and banking data while keeping tool definitions centrally managed within Databricks.
+---
 
-## 📊 Demonstrated Result
+# 🚀 What This Project Demonstrates
 
-During testing, the deployed agent successfully combined multiple tool outputs to generate a customer banking summary containing:
+This implementation demonstrates practical concepts used in modern **Agentic AI + Data Engineering** systems:
 
-- Account information and current balance
-- Recent transaction history
-- Credit-card details and utilization
-- Transaction-specific status information
-- Important account or transaction alerts
+- tool-using AI agents
+- supervisor-agent orchestration
+- natural-language-to-tool routing
+- parallel tool execution
+- governed AI data access
+- structured function calling
+- multi-source result synthesis
+- separation of deterministic data operations from probabilistic LLM reasoning
+- Databricks Data + AI integration
 
-## 💡 Key Learning Outcomes
+---
 
-This project demonstrates practical experience with:
+# 🔮 Potential Production Extensions
 
-- Building AI agents on Databricks
-- Creating tools with Unity Catalog Functions
-- Connecting structured enterprise data to AI agents
-- Supervisor-based tool orchestration
-- Multi-tool function calling
-- Natural-language interfaces for structured data
-- Model Serving endpoint deployment
-- AI application testing through Databricks Playground
-- Governed enterprise AI architecture
+The architecture can be extended with:
 
-## 🔮 Future Improvements
+- customer authentication and authorization
+- human-in-the-loop escalation
+- agent evaluation and tracing
+- conversation history
+- fraud-alert tools
+- payment-dispute workflows
+- loan and EMI assistance
+- tool-level permissions
+- PII masking
+- audit logging and observability
+- production monitoring and guardrails
 
-Potential production-oriented extensions include:
+These are intentionally treated as **future extensions**, not features already implemented in this repository.
 
-- Customer authentication and authorization
-- Row-level access controls
-- Audit logging and monitoring
-- Knowledge Assistant integration for banking policies and FAQs
-- Additional tools for loans, cards, disputes, and payments
-- Frontend customer-support application
-- Production API integration
-- Automated agent evaluation and quality monitoring
+---
 
-## 👨‍💻 Author
+# 📌 Project Scope
 
-**Syed Saud Alam**
+This repository is a **portfolio implementation using sample banking data** designed to demonstrate a production-style Agentic AI architecture.
 
-Data Engineer | AI Engineer
+It is not connected to a real banking environment and does not process real customer financial information.
+
+---
+
+<div align="center">
+
+## 👨‍💻 Built by Syed Saud Alam
+
+**Data Engineer | AI Engineer**
+
+Building systems at the intersection of **Data Engineering, Databricks and Agentic AI**.
 
 GitHub: `syedsaud15`  
 LinkedIn: `syed-saud-dev`
 
 ---
 
-> This project uses simulated banking data for learning and demonstration purposes. It is not connected to a real banking system.
+### ⭐ Agentic AI × Data Engineering × Databricks
+
+</div>
