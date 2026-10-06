@@ -402,3 +402,17 @@ LinkedIn: `syed-saud-dev`
 ### ⭐ Agentic AI × Data Engineering × Databricks
 
 </div>
+
+---
+
+## 🏗️ Agentic System Architecture
+
+<p align="center">
+  <img src="screenshots/agentic-banking-architecture.png"
+       alt="Agentic Banking Intelligence on Databricks - System Architecture"
+       width="100%">
+</p>
+
+> **Execution Flow:** Natural Language Request → Supervisor Agent → Parallel Tool Selection & Execution → Governed Unity Catalog Functions → Banking Data → Unified AI Response
+
+---
